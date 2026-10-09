@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Openlink — Internet Rápida</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background: #0F3480;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 40px 30px;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        h1 {
+            color: #FFFFFF;
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            background: #FCD116;
+            color: #000000;
+            font-weight: bold;
+            padding: 8px 25px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 25px;
+            font-size: 16px;
+        }
+
+        h2 {
+            color: #FFFFFF;
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+
+        .subtitulo {
+            color: #D0D7F0;
+            font-size: 17px;
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+
+        .lista {
+            text-align: left;
+            margin-bottom: 40px;
+            padding: 0 10px;
+        }
+
+        .item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 22px;
+        }
+
+        .icone {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #34C759, #A8C600);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .texto {
+            color: #FFFFFF;
+            font-size: 18px;
+        }
+
+        .btn-localizacao {
+            background: linear-gradient(90deg, #00A84F, #FCD116);
+            color: #002B7C;
+            border: none;
+            padding: 18px 30px;
+            font-size: 19px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-localizacao:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 20px rgba(0, 168, 79, 0.3);
+        }
+
+        .btn-localizacao:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status {
+            margin-top: 20px;
+            font-size: 15px;
+            color: #B8C4F0;
+            min-height: 40px;
+        }
+
+        .whatsapp-rodape {
+            margin-top: 25px;
+            color: #B8C4F0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Openlink</h1>
+        <div class="tag">INSTALAÇÃO GRÁTIS</div>
+        
+        <h2>Internet rápida e estável</h2>
+        <p class="subtitulo">Conecte sua casa com velocidade e qualidade profissional.</p>
+
+        <div class="lista">
+            <div class="item">
+                <div class="icone">⚡</div>
+                <span class="texto">Ultra velocidade</span>
+            </div>
+            <div class="item">
+                <div class="icone">📊</div>
+                <span class="texto">Wi-Fi potente</span>
+            </div>
+            <div class="item">
+                <div class="icone">💰</div>
+                <span class="texto">Preço acessível</span>
+            </div>
+            <div class="item">
+                <div class="icone">🔧</div>
+                <span class="texto">Suporte rápido</span>
+            </div>
+        </div>
+
+        <button class="btn-localizacao" id="btnEnviar" onclick="pegarLocalizacao()">
+            📍 Enviar localização
+        </button>
+        
+        <div class="status" id="status"></div>
+        
+        <p class="whatsapp-rodape">Atendimento rápido via WhatsApp</p>
+    </div>
+
+    <script>
+        // 👇 COLOQUE SEU NÚMERO AQUI
+        const SEU_NUMERO = "5581996060034"; // Exemplo: 5581988776655
+
+        function pegarLocalizacao() {
+            const btn = document.getElementById('btnEnviar');
+            const status = document.getElementById('status');
+            
+            btn.disabled = true;
+            btn.innerHTML = "⏳ Buscando...";
+            status.innerText = "Aguarde... permita o acesso à localização quando solicitado.";
+
+            if (!navigator.geolocation) {
+                status.innerHTML = "❌ Seu navegador não suporta localização.";
+                btn.disabled = false;
+                btn.innerHTML = "📍 Enviar localização";
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                function(posicao) {
+                    const lat = posicao.coords.latitude;
+                    const lng = posicao.coords.longitude;
+                    const mapaLink = `https://www.google.com/maps?q=${lat},${lng}`;
+                    
+                    const mensagem = `📍 *LOCALIZAÇÃO DO CLIENTE*%0A%0ALatitude: ${lat}%0ALongitude: ${lng}%0A%0A🔗 Abrir no Google Maps: ${mapaLink}`;
+                    const whatsappUrl = `https://wa.me/${SEU_NUMERO}?text=${mensagem}`;
+                    
+                    status.innerHTML = "✅ Localização obtida! Abrindo WhatsApp...";
+                    btn.innerHTML = "✅ Pronto!";
+                    
+                    window.open(whatsappUrl, '_blank');
+                    
+                    setTimeout(() => {
+                        btn.disabled = false;
+                        btn.innerHTML = "📍 Enviar localização";
+                        status.innerHTML = "";
+                    }, 4000);
+                },
+                function(erro) {
+                    let msg = "❌ Erro: ";
+                    switch(erro.code) {
+                        case 1: msg += "Você negou o acesso à localização."; break;
+                        case 2: msg += "Não foi possível encontrar sua localização."; break;
+                        case 3: msg += "Tempo esgotado. Tente novamente."; break;
+                        default: msg += "Erro desconhecido.";
+                    }
+                    status.innerHTML = msg;
+                    btn.disabled = false;
+                    btn.innerHTML = "📍 Enviar localização";
+                },
+                { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+            );
+        }
+    </script>
+</body>
+</html>
